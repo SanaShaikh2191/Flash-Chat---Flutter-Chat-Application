@@ -1,17 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String id = 'login_screen';
+class RegistrationScreen extends StatefulWidget {
+  static const String id = 'registration_screen';
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   String? email;
@@ -39,13 +40,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 48.0,
               ),
               TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    email = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your email')),
+                onChanged: (value) {
+                  email = value;
+                },
+                decoration:
+                    kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+              ),
               SizedBox(
                 height: 8.0,
               ),
@@ -53,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                   obscureText: true,
                   onChanged: (value) {
+                    //Do something with the user input.
                     password = value;
                   },
                   decoration: kTextFieldDecoration.copyWith(
@@ -66,10 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     showSpinner = true;
                   });
                   try {
-                    final user = await _auth.signInWithEmailAndPassword(
+                    final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email!, password: password!);
-
-                    if (user != null) {
+                    if (newUser != null) {
                       Navigator.pushNamed(context, ChatScreen.id);
                     }
                     setState(() {
@@ -79,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     print(e);
                   }
                 },
-                color: Colors.lightBlueAccent,
-                text: 'Log In',
+                color: Colors.blueAccent,
+                text: 'Register',
               )
             ],
           ),
